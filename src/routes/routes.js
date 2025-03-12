@@ -130,7 +130,8 @@ router.put("/updateUser/:id", async (req, res) => {
     if (!check.success) {
       return res.status(404).json({ message: "Validation failed" });
     }
-
+    
+    // checking if the user with id exists or not
     // pass id and updates
     const updatedUser = await userModel.findByIdAndUpdate(id, updates, {
       new: true,
