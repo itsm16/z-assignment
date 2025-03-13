@@ -22,7 +22,7 @@ router.post("/addUser", async (req, res) => {
   const schema = z.object({
     name: z.string().min(2, { message: "Too short" }),
     email: z.string().email({ message: "Invalid format" }),
-    name: z.number()
+    age: z.number().int().positive()
   });
 
   // check if payload is valid
