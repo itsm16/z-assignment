@@ -43,12 +43,21 @@ router.post("/addUser", async (req, res) => {
   const s_id = userCount + 1;
 
   // create user
-  const newUser = await userModel.create({
-    s_id,
-    name,
-    email,
-    age: Number(age)
-  });
+  const newUser = await userModel.create(
+    age ?
+      {
+        s_id,
+        name,
+        email,
+        age: Number(age)
+      }
+      :
+      {
+        s_id,
+        name,
+        email
+      }
+  );
 
   res.json({
     message: "User created",
