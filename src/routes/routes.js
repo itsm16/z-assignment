@@ -22,7 +22,10 @@ router.post("/addUser", async (req, res) => {
   const schema = z.object({
     name: z.string().min(2, { message: "Too short" }),
     email: z.string().email({ message: "Invalid format" }),
-    age: z.number().int().positive()
+    age: z.preprocess(
+      (val) => (val ? Number(val) : undefined),
+      z.number().int().positive().optional()
+    )
   });
 
   // check if payload is valid
@@ -44,7 +47,7 @@ router.post("/addUser", async (req, res) => {
     s_id,
     name,
     email,
-    age
+    age: Number(age)
   });
 
   res.json({
@@ -115,15 +118,15 @@ router.put("/updateUser/:id", async (req, res) => {
     const existingUser = await userModel.findById(id);
     console.log(existingUser)
     if (!existingUser) {
-        return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    if(!updates.email){
-        updates.email = existingUser.email;
+    if (!updates.email) {
+      updates.email = existingUser.email;
     }
 
-    if(!updates.name){
-        updates.name = existingUser.name;
+    if (!updates.name) {
+      updates.name = existingUser.name;
     }
 
     // check payload
@@ -132,7 +135,7 @@ router.put("/updateUser/:id", async (req, res) => {
     if (!check.success) {
       return res.status(404).json({ message: "Validation failed" });
     }
-    
+
     // checking if the user with id exists or not
     // pass id and updates
     const updatedUser = await userModel.findByIdAndUpdate(id, updates, {
@@ -148,7 +151,7 @@ router.put("/updateUser/:id", async (req, res) => {
       user: updatedUser,
     });
   } catch (error) {
-    
+
     res.status(500).json({ message: "Internal server error" });
   }
 });
