@@ -15,13 +15,14 @@ router.get("/", (req, res) => {
 
 router.post("/addUser", async (req, res) => {
   const payload = req.body;
-  const { name, email } = payload;
+  const { name, email, age } = payload;
 
   console.log(payload);
 
   const schema = z.object({
     name: z.string().min(2, { message: "Too short" }),
     email: z.string().email({ message: "Invalid format" }),
+    name: z.number()
   });
 
   // check if payload is valid
@@ -43,6 +44,7 @@ router.post("/addUser", async (req, res) => {
     s_id,
     name,
     email,
+    age
   });
 
   res.json({
